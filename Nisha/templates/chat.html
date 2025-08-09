@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>Rosan's Chat Room</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f5f5f5;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 600px;
+            margin: 50px auto;
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0,0,0,0.1);
+            padding: 30px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #444;
+        }
+
+        .chat-box {
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            height: 300px;
+            padding: 10px;
+            overflow-y: scroll;
+            background-color: #fafafa;
+            margin-bottom: 15px;
+        }
+
+        .chat-input {
+            display: flex;
+        }
+
+        input[type="text"] {
+            flex: 1;
+            padding: 10px;
+            font-size: 16px;
+        }
+
+        button {
+            padding: 10px 20px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #218838;
+        }
+
+        .message {
+            margin-bottom: 10px;
+        }
+
+        .own-message {
+            font-weight: bold;
+            color: #007bff;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Rosan's Chat Room</h1>
+        <div class="chat-box" id="chat-box">
+            <!-- messages will appear here -->
+        </div>
+        <form class="chat-input" id="chat-form">
+            <input type="text" id="message-input" placeholder="Type a message..." autocomplete="off" />
+            <button type="submit">Send</button>
+        </form>
+    </div>
+
+<script>
+    const roomName = "{{ room_name|escapejs }}";
+    const username = "{{ user.username|default:'Anonymous'|escapejs }}";
+
+    const chatSocket = new WebSocket(
+        'ws://' + window.location.host + '/ws/chat/' + roomName + '/'
+    );
+
+    const chatBox = document.getElementById('chat-box');
+    const chatForm = document.getElementById('chat-form');
+    const messageInput = document.getElementById('message-input');
+
+    chatSocket.onmessage = function(e) {
+        const data = JSON.parse(e.data);
+        const message = data.message;
+        const user = data.username;
+
+        const messageElement = document.createElement('div');
+        messageElement.classList.add('message');
+        if (user === username) {
+            messageElement.classList.add('own-message');
+        }
+        messageElement.innerHTML = `<strong>${user}</strong>: ${message}`;
+        chatBox.appendChild(messageElement);
+
+        chatBox.scrollTop = chatBox.scrollHeight;
+    };
+
+    chatSocket.onclose = function(e) {
+        console.error('Chat socket closed unexpectedly');
+    };
+
+    chatForm.onsubmit = function(e) {
+        e.preventDefault();
+        const message = messageInput.value.trim();
+        if (!message) return;
+
+        chatSocket.send(JSON.stringify({
+            'message': message,
+            'username': username,
+        }));
+
+        messageInput.value = '';
+    };
+</script>
+</body>
+</html>

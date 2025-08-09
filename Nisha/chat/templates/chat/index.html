@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Rosan's Chat Room</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f4f4;
+            margin: 0;
+            height: 100vh;
+            overflow: hidden;
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Container for floating shapes */
+        #shape-container {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* Base style for shapes */
+        .shape {
+            position: absolute;
+            opacity: 0.6;
+            mix-blend-mode: screen;
+            animation-timing-function: ease-in-out;
+            transition: transform 0.2s ease-out;
+        }
+
+        /* Circle */
+        .circle {
+            border-radius: 50%;
+            background-color: #007bff;
+        }
+
+        /* Square */
+        .square {
+            background-color: #28a745;
+        }
+
+        /* Triangle */
+        .triangle {
+            width: 0;
+            height: 0;
+            border-left: 15px solid transparent;
+            border-right: 15px solid transparent;
+            border-bottom: 25px solid #ff3860;
+            background: transparent !important;
+            border-radius: 0 !important;
+        }
+
+        /* Chat box on top */
+        #chat-box {
+            position: relative;
+            z-index: 1;
+            width: 500px;
+            height: 500px;
+            background: white;
+            border-radius: 10px;
+            overflow-y: scroll;
+            padding: 15px;
+            box-shadow: 0 0 15px rgba(0,0,0,0.2);
+            display: flex;
+            flex-direction: column;
+        }
+
+        #chat-log {
+            flex-grow: 1;
+            overflow-y: auto;
+            margin-bottom: 10px;
+            border: 1px solid #eee;
+            padding: 10px;
+            border-radius: 5px;
+            background-color: #fafafa;
+        }
+
+        #chat-message-input {
+            width: 75%;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+
+        #chat-message-submit {
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            background-color: #007bff;
+            color: white;
+            cursor: pointer;
+            margin-left: 10px;
+        }
+
+        .message {
+            margin: 5px 0;
+            padding: 8px;
+            border-radius: 5px;
+            background-color: #f0f0f0;
+        }
+
+        .message.own {
+            background-color: #e3f2fd;
+            text-align: right;
+        }
+
+        .username {
+            font-weight: bold;
+            color: #007bff;
+        }
+
+        .timestamp {
+            font-size: 0.8em;
+            color: #666;
+            margin-left: 10px;
+        }
+
+        #input-area {
+            display: flex;
+            align-items: center;
+        }
+
+        .status {
+            color: #28a745;
+            font-size: 0.9em;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div id="shape-container"></div>
+
+    <div id="chat-box">
+        <h2>Welcome to {{ room_name|title }}!</h2>
+        <div id="chat-log">
+            <!-- Display existing messages from database -->
+            {% for message in messages %}
+                <div class="message">
+                    <span class="username">{{ message.username }}:</span> 
+                    {{ message.content }}
+                    <span class="timestamp">{{ message.timestamp|date:"H:i" }}</span>
+                </div>
+            {% empty %}
+                <div class="message">
+                    <span class="username">System:</span> No messages yet. Start the conversation!
+                </div>
+            {% endfor %}
+        </div>
+        <div id="input-area">
+            <input id="chat-message-input" type="text" placeholder="Type your message..." autocomplete="off" />
+            <button id="chat-message-submit">Send</button>
+        </div>
+        <div class="status" id="status">Ready to chat!</div>
+    </div>
+
+<script>
+    // Floating shapes animation code
+    const shapeContainer = document.getElementById('shape-container');
+    const shapesCount = 30;
+    const shapes = [];
+
+    const shapeTypes = ['circle', 'square', 'triangle'];
+
+    for (let i = 0; i < shapesCount; i++) {
+        const shape = document.createElement('div');
+        const type = shapeTypes[Math.floor(Math.random() * shapeTypes.length)];
+        shape.classList.add('shape', type);
+
+        let size = Math.random() * 30 + 20;
+
+        if (type === 'triangle') {
+            shape.style.borderLeftWidth = (size / 2) + 'px';
+            shape.style.borderRightWidth = (size / 2) + 'px';
+            shape.style.borderBottomWidth = size + 'px';
+            shape.style.width = '0';
+            shape.style.height = '0';
+        } else {
+            shape.style.width = size + 'px';
+            shape.style.height = size + 'px';
+        }
+
+        shape.style.left = Math.random() * (window.innerWidth - size) + 'px';
+        shape.style.top = Math.random() * (window.innerHeight - size) + 'px';
+
+        shape.dataset.originX = parseFloat(shape.style.left);
+        shape.dataset.originY = parseFloat(shape.style.top);
+        shape.dataset.size = size;
+        shape.dataset.directionX = (Math.random() * 0.6 - 0.3);
+        shape.dataset.directionY = (Math.random() * 0.6 - 0.3);
+
+        shapeContainer.appendChild(shape);
+        shapes.push(shape);
+    }
+
+    function animateShapes() {
+        shapes.forEach(shape => {
+            let x = parseFloat(shape.style.left);
+            let y = parseFloat(shape.style.top);
+
+            let dirX = parseFloat(shape.dataset.directionX);
+            let dirY = parseFloat(shape.dataset.directionY);
+            let size = parseFloat(shape.dataset.size);
+
+            x += dirX;
+            y += dirY;
+
+            if (x < 0) {
+                x = 0;
+                shape.dataset.directionX = -dirX;
+            } else if (x + size > window.innerWidth) {
+                x = window.innerWidth - size;
+                shape.dataset.directionX = -dirX;
+            }
+
+            if (y < 0) {
+                y = 0;
+                shape.dataset.directionY = -dirY;
+            } else if (y + size > window.innerHeight) {
+                y = window.innerHeight - size;
+            }
+
+            shape.style.left = x + 'px';
+            shape.style.top = y + 'px';
+        });
+
+        requestAnimationFrame(animateShapes);
+    }
+
+    animateShapes();
+
+    window.addEventListener('mousemove', e => {
+        const mouseX = e.clientX;
+        const mouseY = e.clientY;
+
+        shapes.forEach(shape => {
+            const rect = shape.getBoundingClientRect();
+            const shapeX = rect.left + rect.width / 2;
+            const shapeY = rect.top + rect.height / 2;
+
+            const dx = shapeX - mouseX;
+            const dy = shapeY - mouseY;
+            const dist = Math.sqrt(dx*dx + dy*dy);
+
+            const repelRadius = 100;
+            if (dist < repelRadius) {
+                const angle = Math.atan2(dy, dx);
+                const force = (repelRadius - dist) / repelRadius * 10;
+
+                let newX = parseFloat(shape.style.left) + Math.cos(angle) * force;
+                let newY = parseFloat(shape.style.top) + Math.sin(angle) * force;
+
+                newX = Math.min(window.innerWidth - rect.width, Math.max(0, newX));
+                newY = Math.min(window.innerHeight - rect.height, Math.max(0, newY));
+
+                shape.style.left = newX + 'px';
+                shape.style.top = newY + 'px';
+            }
+        });
+    });
+
+    // Simple AJAX-based chat (works with regular Django server)
+    const messageInputDom = document.querySelector('#chat-message-input');
+    const chatLog = document.querySelector('#chat-log');
+    const statusDiv = document.querySelector('#status');
+    
+    let lastMessageCount = {{ messages|length }};
+
+    messageInputDom.focus();
+
+    // Function to send message
+    function sendMessage() {
+        const message = messageInputDom.value.trim();
+        if (!message) return;
+
+        statusDiv.textContent = 'Sending...';
+        
+        // Create form data
+        const formData = new FormData();
+        formData.append('message', message);
+        formData.append('csrfmiddlewaretoken', '{{ csrf_token }}');
+
+        fetch('/chat/send/', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                messageInputDom.value = '';
+                statusDiv.textContent = 'Message sent!';
+                loadNewMessages();
+            } else {
+                statusDiv.textContent = 'Failed to send message';
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            statusDiv.textContent = 'Error sending message';
+        });
+    }
+
+    // Function to load new messages
+    function loadNewMessages() {
+        fetch('/chat/messages/')
+        .then(response => response.json())
+        .then(data => {
+            if (data.messages.length > lastMessageCount) {
+                // Add new messages
+                for (let i = lastMessageCount; i < data.messages.length; i++) {
+                    const msg = data.messages[i];
+                    const messageDiv = document.createElement('div');
+                    messageDiv.className = 'message';
+                    
+                    const timestamp = new Date(msg.timestamp).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+                    messageDiv.innerHTML = `<span class="username">${msg.username}:</span> ${msg.content} <span class="timestamp">${timestamp}</span>`;
+                    
+                    chatLog.appendChild(messageDiv);
+                }
+                lastMessageCount = data.messages.length;
+                chatLog.scrollTop = chatLog.scrollHeight;
+                statusDiv.textContent = 'Ready to chat!';
+            }
+        })
+        .catch(error => {
+            console.error('Error loading messages:', error);
+        });
+    }
+
+    // Event listeners
+    messageInputDom.addEventListener('keyup', function(e) {
+        if (e.key === 'Enter') {
+            sendMessage();
+        }
+    });
+
+    document.querySelector('#chat-message-submit').addEventListener('click', sendMessage);
+
+    // Poll for new messages every 2 seconds
+    setInterval(loadNewMessages, 2000);
+
+    // Auto-scroll to bottom on page load
+    document.addEventListener('DOMContentLoaded', function() {
+        chatLog.scrollTop = chatLog.scrollHeight;
+    });
+</script>
+
+</body>
+</html>
