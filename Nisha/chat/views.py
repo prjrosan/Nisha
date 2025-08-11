@@ -63,6 +63,7 @@ def whatsapp_view(request):
         'user': request.user,      # Current user info
     })
 
+@login_required  # Require authentication to send messages
 @require_POST  # Decorator ensures this view only accepts POST requests
 def send_message(request):
     """

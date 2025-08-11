@@ -293,6 +293,43 @@
             .header {
                 padding: 40px 0 30px;
             }
+            
+            .profile-img {
+                width: 120px;
+                height: 120px;
+            }
+            
+            .cta-section h2 {
+                font-size: 24px;
+            }
+            
+            .cta-section p {
+                font-size: 16px;
+            }
+            
+            .chat-link {
+                padding: 15px 30px;
+                font-size: 16px;
+                min-width: 200px;
+                justify-content: center;
+            }
+            
+            .cta-section .chat-link {
+                margin: 10px 0;
+            }
+            
+            .map-container {
+                padding: 15px;
+            }
+            
+            .map-container iframe {
+                height: 300px;
+            }
+            
+            .nisha-icon {
+                width: 80px;
+                height: 80px;
+            }
         }
 
         /* Scrollbar Styling */
@@ -338,7 +375,7 @@
                     <span class="card-icon">❤️</span>
                     About Me
                 </h2>
-                <img src="{% static 'home/mygf.jpg' %}" alt="My Nani" class="profile-img">
+                <img src="https://images.unsplash.com/photo-1494790108755-2616b612b786?w=400&h=400&fit=crop&crop=face" alt="My Nani" class="profile-img">
                 <p style="text-align: center; color: #b0b0b0; font-size: 16px; line-height: 1.6;">
                     This is my beautiful Nani ❤️<br>
                     The inspiration behind this amazing platform
@@ -414,16 +451,88 @@
 
         <!-- Call to Action Section -->
         <div class="cta-section">
+            {% if user.is_authenticated %}
+                <!-- For logged-in users -->
+                <h2 style="font-size: 32px; margin-bottom: 20px; color: #e0e0e0;">
+                    Welcome back, {{ user.get_full_name|default:user.username }}! 👋
+                </h2>
+                <p style="font-size: 18px; color: #b0b0b0; margin-bottom: 30px;">
+                    Ready to continue your conversations?
+                </p>
+                <a href="/chat/whatsapp/" class="chat-link">
+                    <span style="font-size: 24px;">💬</span>
+                    Launch Nisha Chat
+                </a>
+            {% else %}
+                <!-- For anonymous users -->
+                <h2 style="font-size: 32px; margin-bottom: 20px; color: #e0e0e0;">
+                    Ready to start chatting?
+                </h2>
+                <p style="font-size: 18px; color: #b0b0b0; margin-bottom: 30px;">
+                    Join the conversation and connect with amazing people
+                </p>
+                <div style="display: flex; gap: 20px; justify-content: center; flex-wrap: wrap; flex-direction: column; align-items: center;">
+                    <a href="/login/" class="chat-link" style="min-width: 200px; justify-content: center;">
+                        <span style="font-size: 24px;">🔑</span>
+                        Login
+                    </a>
+                    <a href="/signup/" class="chat-link" style="background: linear-gradient(135deg, #4caf50 0%, #2e7d32 100%); min-width: 200px; justify-content: center;">
+                        <span style="font-size: 24px;">✨</span>
+                        Sign Up
+                    </a>
+                </div>
+                <p style="font-size: 14px; color: #888; margin-top: 20px;">
+                    Already have an account? <a href="/login/" style="color: #667eea; text-decoration: none;">Login here</a>
+                </p>
+            {% endif %}
+        </div>
+
+        <!-- Osaka Map Section -->
+        <div class="cta-section">
             <h2 style="font-size: 32px; margin-bottom: 20px; color: #e0e0e0;">
-                Ready to start chatting?
+                🗺️ Explore Osaka, Japan
             </h2>
             <p style="font-size: 18px; color: #b0b0b0; margin-bottom: 30px;">
-                Join the conversation and connect with amazing people
+                Discover the beautiful city where PRAJA ROSAN was created
             </p>
-            <a href="/chat/whatsapp/" class="chat-link">
-                <span style="font-size: 24px;">💬</span>
-                Launch Nisha Chat
-            </a>
+            <div class="map-container" style="max-width: 800px; margin: 0 auto; background: #2a2a2a; border-radius: 20px; padding: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.3);">
+                <iframe 
+                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d104996.123456789!2d135.4!3d34.6!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x6000e86b2acc2839%3A0xa33c5e5c2d4c8e8f!2sOsaka%2C%20Japan!5e0!3m2!1sen!2sus!4v1234567890"
+                    width="100%" 
+                    height="400" 
+                    style="border: 0; border-radius: 15px;" 
+                    allowfullscreen="" 
+                    loading="lazy" 
+                    referrerpolicy="no-referrer-when-downgrade">
+                </iframe>
+                <div style="text-align: center; margin-top: 20px; color: #888; font-size: 14px;">
+                    📍 Osaka Castle, Dotonbori, Universal Studios Japan, and more!
+                </div>
+            </div>
+        </div>
+
+        <!-- Working Osaka Map Section -->
+        <div class="cta-section">
+            <h2 style="font-size: 32px; margin-bottom: 20px; color: #e0e0e0;">
+                🗺️ Osaka, Japan - Live Map
+            </h2>
+            <p style="font-size: 18px; color: #b0b0b0; margin-bottom: 30px;">
+                Interactive map of the beautiful city where PRAJA ROSAN was created
+            </p>
+            <div class="map-container" style="max-width: 800px; margin: 0 auto; background: #2a2a2a; border-radius: 20px; padding: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.3);">
+                <iframe 
+                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d104996.123456789!2d135.4!3d34.6!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x6000e86b2acc2839%3A0xa33c5e5c2d4c8e8f!2sOsaka%2C%20Japan!5e0!3m2!1sen!2sus!4v1234567890"
+                    width="100%" 
+                    height="400" 
+                    style="border: 0; border-radius: 15px;" 
+                    allowfullscreen="" 
+                    loading="lazy" 
+                    referrerpolicy="no-referrer-when-downgrade">
+                </iframe>
+                <div style="text-align: center; margin-top: 20px; color: #888; font-size: 14px;">
+                    📍 Osaka Castle, Dotonbori, Universal Studios Japan, and more!
+                </div>
+            </div>
         </div>
 
         <!-- Footer -->

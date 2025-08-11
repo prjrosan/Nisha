@@ -6,6 +6,7 @@ from django.contrib import admin  # Django admin interface
 from django.urls import path, include  # URL routing functions
 from django.views.generic import RedirectView  # For redirecting requests
 from django.contrib.auth import views as auth_views  # Built-in authentication views
+from chat.views import register_view  # Import signup functionality
 
 # Main URL patterns for the entire Nisha project
 # These patterns define the top-level navigation structure
@@ -32,8 +33,12 @@ urlpatterns = [
     path('login/', auth_views.LoginView.as_view(redirect_authenticated_user=True), name='login'),
     
     # Logout functionality at /logout/
-    # next_page='/login/' redirects to login page after logout
-    path('logout/', auth_views.LogoutView.as_view(next_page='/login/'), name='logout'),
+    # next_page='/home/' redirects to home page after logout
+    path('logout/', auth_views.LogoutView.as_view(next_page='/home/'), name='logout'),
+    
+    # Signup/Registration page at /signup/
+    # This makes signup more accessible at the root level
+    path('signup/', register_view, name='signup'),
     
     # Home application URLs
     # All URLs starting with /home/ are handled by the home app

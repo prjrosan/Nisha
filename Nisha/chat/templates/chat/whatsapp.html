@@ -92,6 +92,18 @@
             color: #e0e0e0;
         }
 
+        .logout-btn {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%);
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .logout-btn:hover {
+            background: linear-gradient(135deg, #ff5252 0%, #d32f2f 100%);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(255, 107, 107, 0.3);
+        }
+
         .search-container {
             padding: 15px;
             background: #3a3a3a;
@@ -569,12 +581,14 @@
                     <div class="user-name">{{ user.get_full_name|default:user.username|default:"Guest" }}</div>
                 </div>
                 <div class="sidebar-actions">
-                    <button class="action-btn" onclick="showNewChatModal()" title="New Chat">💬</button>
-                    <button class="action-btn" onclick="showProfileModal()" title="Profile">⚙️</button>
                     {% if user.is_authenticated %}
-                        <a href="/logout/" class="action-btn" title="Logout">🚪</a>
+                        <button class="action-btn" onclick="showNewChatModal()" title="New Chat">💬</button>
+                        <button class="action-btn" onclick="showProfileModal()" title="Profile">⚙️</button>
+                        <button class="action-btn logout-btn" onclick="confirmLogout()" title="Logout">🚪</button>
                     {% else %}
-                        <a href="/login/" class="action-btn" title="Login">🔑</a>
+                        <button class="action-btn" onclick="showLoginModal()" title="Login">🔑</button>
+                        <button class="action-btn" onclick="showSignupModal()" title="Sign Up" style="background: linear-gradient(135deg, #4caf50 0%, #2e7d32 100%);">✨</button>
+                        <a href="/home/" class="action-btn" title="Home">🏠</a>
                     {% endif %}
                 </div>
             </div>
@@ -672,6 +686,65 @@
         </div>
     </div>
 
+    <!-- Login Modal -->
+    <div class="modal" id="loginModal">
+        <div class="modal-content">
+            <div class="modal-header">Login to Nisha</div>
+            <form id="loginForm">
+                <div class="form-group">
+                    <label class="form-label">Username</label>
+                    <input type="text" class="form-input" id="loginUsername" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Password</label>
+                    <input type="password" class="form-input" id="loginPassword" required>
+                </div>
+                <div id="loginError" style="color: #ff6b6b; margin: 10px 0; display: none;"></div>
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-secondary" onclick="hideLoginModal()">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Login</button>
+                </div>
+            </form>
+            <div style="text-align: center; margin-top: 15px; padding-top: 15px; border-top: 1px solid #4a4a4a;">
+                <span style="color: #b0b0b0;">Don't have an account? </span>
+                <button onclick="hideLoginModal(); showSignupModal();" style="background: none; border: none; color: #667eea; cursor: pointer; text-decoration: underline;">Sign Up</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Signup Modal -->
+    <div class="modal" id="signupModal">
+        <div class="modal-content">
+            <div class="modal-header">Join Nisha</div>
+            <form id="signupForm">
+                <div class="form-group">
+                    <label class="form-label">Username</label>
+                    <input type="text" class="form-input" id="signupUsername" required>
+                    <div class="help-text" style="font-size: 12px; color: #888; margin-top: 5px;">Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only.</div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Password</label>
+                    <input type="password" class="form-input" id="signupPassword1" required>
+                    <div class="help-text" style="font-size: 12px; color: #888; margin-top: 5px;">Your password must contain at least 8 characters.</div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Confirm Password</label>
+                    <input type="password" class="form-input" id="signupPassword2" required>
+                </div>
+                <div id="signupError" style="color: #ff6b6b; margin: 10px 0; display: none;"></div>
+                <div id="signupSuccess" style="color: #4caf50; margin: 10px 0; display: none;"></div>
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-secondary" onclick="hideSignupModal()">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Create Account</button>
+                </div>
+            </form>
+            <div style="text-align: center; margin-top: 15px; padding-top: 15px; border-top: 1px solid #4a4a4a;">
+                <span style="color: #b0b0b0;">Already have an account? </span>
+                <button onclick="hideSignupModal(); showLoginModal();" style="background: none; border: none; color: #667eea; cursor: pointer; text-decoration: underline;">Login</button>
+            </div>
+        </div>
+    </div>
+
     <script>
         let currentChatId = null;
         let lastMessageCount = 0;
@@ -685,6 +758,29 @@
         function hideNewChatModal() {
             document.getElementById('newChatModal').style.display = 'none';
             document.getElementById('newChatForm').reset();
+        }
+
+        // Login Modal Functions
+        function showLoginModal() {
+            document.getElementById('loginModal').style.display = 'flex';
+            document.getElementById('loginError').style.display = 'none';
+        }
+
+        function hideLoginModal() {
+            document.getElementById('loginModal').style.display = 'none';
+            document.getElementById('loginForm').reset();
+        }
+
+        // Signup Modal Functions
+        function showSignupModal() {
+            document.getElementById('signupModal').style.display = 'flex';
+            document.getElementById('signupError').style.display = 'none';
+            document.getElementById('signupSuccess').style.display = 'none';
+        }
+
+        function hideSignupModal() {
+            document.getElementById('signupModal').style.display = 'none';
+            document.getElementById('signupForm').reset();
         }
 
         // Select Chat
@@ -835,6 +931,100 @@
             .catch(error => console.error('Error creating chat:', error));
         });
 
+        // Login Form Handler
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData();
+            formData.append('username', document.getElementById('loginUsername').value);
+            formData.append('password', document.getElementById('loginPassword').value);
+            formData.append('csrfmiddlewaretoken', '{{ csrf_token }}');
+
+            fetch('/login/', {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            })
+            .then(response => {
+                if (response.ok) {
+                    // Login successful - reload page to show authenticated state
+                    location.reload();
+                } else {
+                    return response.text().then(text => {
+                        throw new Error('Login failed');
+                    });
+                }
+            })
+            .catch(error => {
+                const errorDiv = document.getElementById('loginError');
+                errorDiv.textContent = 'Invalid username or password. Please try again.';
+                errorDiv.style.display = 'block';
+            });
+        });
+
+        // Signup Form Handler
+        document.getElementById('signupForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const password1 = document.getElementById('signupPassword1').value;
+            const password2 = document.getElementById('signupPassword2').value;
+            
+            // Check if passwords match
+            if (password1 !== password2) {
+                const errorDiv = document.getElementById('signupError');
+                errorDiv.textContent = 'Passwords do not match.';
+                errorDiv.style.display = 'block';
+                return;
+            }
+            
+            const formData = new FormData();
+            formData.append('username', document.getElementById('signupUsername').value);
+            formData.append('password1', password1);
+            formData.append('password2', password2);
+            formData.append('csrfmiddlewaretoken', '{{ csrf_token }}');
+
+            fetch('/signup/', {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    const successDiv = document.getElementById('signupSuccess');
+                    successDiv.textContent = 'Account created successfully! Logging you in...';
+                    successDiv.style.display = 'block';
+                    
+                    // Auto-login after successful signup
+                    setTimeout(() => {
+                        location.reload();
+                    }, 1500);
+                } else {
+                    const errorDiv = document.getElementById('signupError');
+                    let errorMsg = 'Registration failed. ';
+                    if (data.errors) {
+                        const errorList = [];
+                        for (const [field, errors] of Object.entries(data.errors)) {
+                            errorList.push(...errors);
+                        }
+                        errorMsg += errorList.join(' ');
+                    }
+                    errorDiv.textContent = errorMsg;
+                    errorDiv.style.display = 'block';
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                const errorDiv = document.getElementById('signupError');
+                errorDiv.textContent = 'An error occurred. Please try again.';
+                errorDiv.style.display = 'block';
+            });
+        });
+
         // Update Chat List
         function updateChatList() {
             // Reload the page to update chat list with latest messages
@@ -850,9 +1040,31 @@
 
         // Click outside modal to close
         window.onclick = function(event) {
-            const modal = document.getElementById('newChatModal');
-            if (event.target === modal) {
+            const newChatModal = document.getElementById('newChatModal');
+            const loginModal = document.getElementById('loginModal');
+            const signupModal = document.getElementById('signupModal');
+            
+            if (event.target === newChatModal) {
                 hideNewChatModal();
+            } else if (event.target === loginModal) {
+                hideLoginModal();
+            } else if (event.target === signupModal) {
+                hideSignupModal();
+            }
+        }
+
+        // Logout Confirmation
+        function confirmLogout() {
+            if (confirm('Are you sure you want to logout from Nisha? 👋')) {
+                // Show logout animation
+                const logoutBtn = document.querySelector('.logout-btn');
+                logoutBtn.innerHTML = '⏳';
+                logoutBtn.style.background = '#ffa726';
+                
+                // Redirect to logout after short delay
+                setTimeout(() => {
+                    window.location.href = '/logout/';
+                }, 500);
             }
         }
     </script>

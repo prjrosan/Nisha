@@ -248,7 +248,7 @@
         </div>
         
         <div class="guest-link">
-            <a href="/chat/whatsapp/">Continue as Guest</a>
+            <a href="/home/">← Back to Home</a>
         </div>
     </div>
 
@@ -264,7 +264,7 @@
             errorContainer.innerHTML = '';
             successContainer.innerHTML = '';
             
-            fetch('/chat/register/', {
+            fetch('/signup/', {
                 method: 'POST',
                 body: formData,
                 headers: {
@@ -276,7 +276,7 @@
                 if (data.success) {
                     successContainer.innerHTML = '<div class="success-message">Account created successfully! Redirecting...</div>';
                     setTimeout(() => {
-                        window.location.href = data.redirect || '/chat/whatsapp/';
+                        window.location.href = data.redirect || '/home/';
                     }, 1500);
                 } else {
                     let errorHtml = '<div class="error-message">';
