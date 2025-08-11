@@ -296,10 +296,7 @@
                 padding: 40px 0 30px;
             }
             
-            .profile-img {
-                width: 120px;
-                height: 120px;
-            }
+            /* Mobile profile image size - removed duplicate */
             
             .cta-section h2 {
                 font-size: 24px;
@@ -379,7 +376,7 @@
                     <span class="card-icon">❤️</span>
                     About Me
                 </h2>
-                <img src="https://via.placeholder.com/400x400/667eea/ffffff?text=Nani+❤️" alt="She is Nani" class="profile-img">
+                <img src="{% static 'home/mygf.jpg' %}" alt="She is Nani" class="profile-img">
                 <p style="text-align: center; color: #b0b0b0; font-size: 16px; line-height: 1.6;">
                     This is my beautiful Nani ❤️<br>
                     The inspiration behind this amazing platform
@@ -458,7 +455,7 @@
             {% if user.is_authenticated %}
                 <!-- For logged-in users -->
                 <h2 style="font-size: 32px; margin-bottom: 20px; color: #e0e0e0;">
-                    Welcome back, {{ user.get_full_name|default:user.username }}! 👋
+                    Ready to chat, {{ user.get_full_name|default:"Rosan" }}? 💬
                 </h2>
                 <p style="font-size: 18px; color: #b0b0b0; margin-bottom: 30px;">
                     Ready to continue your conversations?
