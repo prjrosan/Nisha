@@ -133,3 +133,6 @@ whitenoise==6.9.0
 wrapt==1.17.2
 xx_ent_wiki_sm @ https://github.com/explosion/spacy-models/releases/download/xx_ent_wiki_sm-3.8.0/xx_ent_wiki_sm-3.8.0-py3-none-any.whl#sha256=6f3c4b853852ea9e9d2dc76cc950dddb10a7e4c42d813308caefe6c5e8be2f0a
 zope.interface==7.2
+daphne==4.2.0
+channels==4.0.0
+
