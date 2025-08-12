@@ -32,7 +32,6 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'channels',
     'chat',
     'home',
 ]
@@ -67,7 +66,6 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'Nisha.wsgi.application'
-ASGI_APPLICATION = 'Nisha.asgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
@@ -120,12 +118,7 @@ STATICFILES_DIRS = [
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# Channel Layers for WebSocket support
-CHANNEL_LAYERS = {
-    'default': {
-        'BACKEND': 'channels.layers.InMemoryChannelLayer',
-    },
-}
+
 
 # Authentication settings
 LOGIN_REDIRECT_URL = '/home/'
