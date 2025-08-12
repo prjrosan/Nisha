@@ -16,6 +16,12 @@
     }
   ],
   "env": {
-    "PYTHONPATH": "."
+    "PYTHONPATH": ".",
+    "DJANGO_SETTINGS_MODULE": "Nisha.settings"
+  },
+  "functions": {
+    "api/index.py": {
+      "runtime": "python3.12"
+    }
   }
 }
