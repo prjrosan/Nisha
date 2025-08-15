@@ -1,1 +1,0 @@
-web: cd Nisha && gunicorn Nisha.wsgi:application --bind 0.0.0.0:$PORT 
