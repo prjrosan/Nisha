@@ -4,14 +4,21 @@ Vercel serverless function entry point for Nisha Django app
 """
 import os
 import sys
+from pathlib import Path
 
-# Add the Nisha subdirectory to Python path
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'Nisha'))
+# Get the current directory and add the Nisha subdirectory to Python path
+current_dir = Path(__file__).parent
+nisha_dir = current_dir.parent / 'Nisha'
+sys.path.insert(0, str(nisha_dir))
 
 # Set Django settings
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'Nisha.settings')
 
-# Import Django and WSGI application
+# Import Django
+import django
+django.setup()
+
+# Import WSGI application
 from django.core.wsgi import get_wsgi_application
 from django.contrib.staticfiles.handlers import StaticFilesHandler
 
