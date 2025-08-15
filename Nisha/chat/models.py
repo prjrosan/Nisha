@@ -48,8 +48,6 @@ class ChatRoom(models.Model):
             Message object: The most recent message, or None if no messages exist
         """
         return self.messages.order_by('-timestamp').first()
-
-class Message(models.Model):
     """
     Model representing individual chat messages.
     Stores message content, sender information, and timestamps.
@@ -125,8 +123,6 @@ class UserProfile(models.Model):
     # Online presence tracking
     is_online = models.BooleanField(default=False)  # Track if user is currently online
     last_seen = models.DateTimeField(auto_now=True)  # Automatically update when user is active
-
-    def __str__(self):
         """
         String representation of the user profile for admin interface.
         

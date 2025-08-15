@@ -2,8 +2,6 @@
 from django.shortcuts import render  # For rendering HTML templates with context data
 import requests  # For making HTTP requests to external APIs
 import json  # For handling JSON data (imported but not actively used)
-
-def home_view(request):
     """
     Home page view function that displays the main landing page with weather information.
     
@@ -19,7 +17,6 @@ def home_view(request):
     city = request.GET.get("city", "Osaka,Japan")  # Default to Osaka, Japan for user location
     
     # Initialize weather_data variable to store weather information
-    weather_data = None
     
     try:
         # Attempt to fetch live weather data from wttr.in API
@@ -67,7 +64,6 @@ def home_view(request):
                     "speed": float(current['windspeedKmph']) * 0.278
                 }
             }
-        else:
             # If API returns non-200 status code, raise exception to trigger fallback
             raise Exception(f"API returned status code: {response.status_code}")
             
@@ -104,6 +100,4 @@ def home_view(request):
 
     # Render the home.html template with weather data
     # The weather data will be available in the template as {{ weather }}
-    return render(request, "home/home.html", {
         "weather": weather_data,  # Pass weather data to template
-    })

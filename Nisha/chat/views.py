@@ -9,8 +9,6 @@ from django.contrib.auth import login, authenticate  # For user authentication f
 from django.contrib.auth.forms import UserCreationForm  # Built-in user registration form
 import json  # For handling JSON data
 from .models import Message, ChatRoom, UserProfile  # Import our custom models
-
-def chat_view(request, room_name='global'):
     """
     Legacy chat view for the original simple chat interface.
     Displays messages in a basic chat room format.
@@ -27,7 +25,6 @@ def chat_view(request, room_name='global'):
     messages = Message.objects.order_by('timestamp')
     
     # Render the original chat template with context data
-    return render(request, 'chat/index.html', {
         'messages': messages,    # All chat messages for display
         'room_name': room_name,  # Current room name
         'user': request.user,    # Current user information

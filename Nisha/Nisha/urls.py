@@ -10,10 +10,8 @@ from chat.views import register_view  # Import signup functionality
 
 # Main URL patterns for the entire Nisha project
 # These patterns define the top-level navigation structure
-urlpatterns = [
     # Django administration interface
     # Accessible at /admin/ - provides database management interface
-    path('admin/', admin.site.urls),
     
     # Root URL redirect to home page
     # When users visit the homepage, show the home page with weather and info first
@@ -23,7 +21,6 @@ urlpatterns = [
     # Chat application URLs
     # All URLs starting with /chat/ are handled by the chat app
     # This includes: /chat/, /chat/whatsapp/, /chat/send/, etc.
-    path('chat/', include('chat.urls')),
     
     # User authentication URLs
     # Built-in Django authentication views for login/logout
