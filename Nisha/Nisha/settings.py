@@ -12,9 +12,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-your-secret-key-here')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.environ.get('DEBUG', 'False').lower() == 'true'
+DEBUG = True  # Temporarily force DEBUG to True for development
 
-ALLOWED_HOSTS = ['*', '.railway.app', '.onrender.com', '.vercel.app', '.now.sh', 'localhost', '127.0.0.1']
+ALLOWED_HOSTS = ['*',   '.vercel.app',  'localhost', '127.0.0.1']
 
 # Application definition
 INSTALLED_APPS = [
@@ -26,8 +26,15 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'home',
     'chat',
-    'whitenoise.middleware.WhiteNoiseMiddleware',
 ]
+
+# Remove channels configuration - using standard Django
+# ASGI_APPLICATION = 'Nisha.asgi.application'
+# CHANNEL_LAYERS = {
+#     'default': {
+#         'BACKEND': 'channels.layers.InMemoryChannelLayer'
+#     }
+# }
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -63,9 +70,11 @@ WSGI_APPLICATION = 'Nisha.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
+# Import for database configuration
+import dj_database_url
+
 # Use PostgreSQL on Railway, SQLite locally
 if os.environ.get('DATABASE_URL'):
-    import dj_database_url
     DATABASES = {
         'default': dj_database_url.config(
             default=os.environ.get('DATABASE_URL'),
@@ -117,7 +126,10 @@ STATICFILES_DIRS = [
 ]
 
 # WhiteNoise configuration for production
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+if not DEBUG:
+    STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+else:
+    STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
@@ -125,7 +137,7 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Authentication settings
-LOGIN_REDIRECT_URL = '/home/'
+LOGIN_REDIRECT_URL = '/chat/whatsapp/'  # Redirect to chat after login
 LOGOUT_REDIRECT_URL = '/home/'
 LOGIN_URL = '/login/'
 

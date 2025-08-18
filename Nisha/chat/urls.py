@@ -11,6 +11,7 @@ from .views import (  # Import all view functions from the current app
 
 # URL patterns for the chat application
 # Each path() defines a route: path(route, view_function, name)
+urlpatterns = [
     # Legacy chat interface (original simple chat)
     path('', chat_view, name='chat'),  # Root chat URL - displays basic chat interface
     
@@ -34,6 +35,7 @@ from .views import (  # Import all view functions from the current app
     
     # Dynamic room access (legacy support)
     path('<str:room_name>/', chat_view, name='room'),  # Access specific room by name (e.g., /chat/general/)
+]
 
 # URL Pattern Explanations:
 # 

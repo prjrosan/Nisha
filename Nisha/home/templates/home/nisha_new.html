@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+    {% load static %}
+    <title>🚨 NISHA NEW TEMPLATE 🚨</title>
+    <style>
+        body { 
+            background: #ff0000; 
+            color: white; 
+            font-size: 32px; 
+            text-align: center; 
+            padding: 50px; 
+            font-family: Arial, sans-serif;
+        }
+        .n-icon {
+            width: 200px;
+            height: 200px;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            border-radius: 50%;
+            margin: 50px auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 120px;
+            font-weight: bold;
+            color: white;
+            animation: pulse 2s infinite;
+            box-shadow: 0 20px 60px rgba(102, 126, 234, 0.6);
+            position: relative;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); box-shadow: 0 20px 60px rgba(102, 126, 234, 0.6); }
+            50% { transform: scale(1.1); box-shadow: 0 30px 80px rgba(102, 126, 234, 0.8); }
+            100% { transform: scale(1); box-shadow: 0 20px 60px rgba(102, 126, 234, 0.6); }
+        }
+        .nani-section {
+            background: #333;
+            padding: 40px;
+            margin: 40px auto;
+            border-radius: 20px;
+            max-width: 800px;
+            border: 5px solid #667eea;
+        }
+        .nani-image {
+            width: 250px;
+            height: 250px;
+            border-radius: 50%;
+            border: 8px solid #667eea;
+            box-shadow: 0 15px 40px rgba(102, 126, 234, 0.4);
+            margin: 20px auto;
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <h1>🎉 NISHA IS WORKING WITH NEW TEMPLATE! ��</h1>
+    
+    <div style="text-align: center; width: 100%;">
+        <div class="n-icon">N</div>
+    </div>
+    
+    <div class="nani-section">
+        <h2>❤️ About Me - She is my Beautiful Nani ❤️</h2>
+        <img src="{% static 'home/mygf.jpg' %}" alt="My Beautiful Nani" class="nani-image">
+        <h3>❤️ My Beautiful Nani ❤️</h3>
+        <p style="font-size: 24px; line-height: 1.6; margin: 20px 0;">
+            This is my beautiful Nani ❤️<br>
+            The inspiration behind this amazing platform
+        </p>
+        <p style="font-size: 20px; line-height: 1.6; color: #ccc;">
+            She is the reason why I create beautiful things<br>
+            Her love and support drive me to build amazing experiences
+        </p>
+    </div>
+    
+    <div style="margin-top: 50px;">
+        <a href="/chat/whatsapp/" style="background: #667eea; color: white; padding: 25px 50px; text-decoration: none; border-radius: 30px; font-size: 24px; font-weight: bold;">
+            💬 Go to Chat
+        </a>
+    </div>
+</body>
+</html> 
