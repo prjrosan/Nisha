@@ -15,7 +15,7 @@ SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-your-secret-key-here'
 DEBUG = os.environ.get('DEBUG', 'False') == 'True'
 # Temporarily force DEBUG to True for development
 
-ALLOWED_HOSTS = ['*', '.onrender.com', '.vercel.app',  'localhost', '127.0.0.1']
+ALLOWED_HOSTS = ['.onrender.com', '.vercel.app',  'localhost', '127.0.0.1']
 
 # Application definition
 INSTALLED_APPS = [
